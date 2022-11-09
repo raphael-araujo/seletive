@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Empresa, Tecnologia, Vaga
+
+admin.site.register(Empresa)
+admin.site.register(Tecnologia)
+admin.site.register(Vaga)
