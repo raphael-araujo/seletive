@@ -53,3 +53,14 @@ def nova_empresa(request):
             'techs': techs
         }
         return render(request, 'nova_empresa.html', context)
+
+
+def empresas(request):
+    empresas = Empresa.objects.all()
+    tecnologias = Tecnologia.objects.all()
+    context = {
+        'empresas': empresas,
+        'tecnologias': tecnologias
+    }
+
+    return render(request, 'empresas.html', context)
