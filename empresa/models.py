@@ -25,7 +25,10 @@ class Empresa(models.Model):
         max_length=3, choices=choices_nicho_mercado)
     caracteristica_empresa = models.TextField()
 
-    def __str__(self) -> str:
+    def quantidade_vagas(self):
+        return Vaga.objects.filter(empresa__id=self.id).count()
+
+    def __str__(self):
         return self.nome
 
 
@@ -44,7 +47,7 @@ class Vaga(models.Model):
         ('F', 'Finalizado')
     )
 
-    empresa = models.ForeignKey(Empresa, on_delete=models.DO_NOTHING)
+    empresa = models.ForeignKey(Empresa, null=True, on_delete=models.SET_NULL)
     titulo = models.CharField(max_length=30)
     nivel_experiencia = models.CharField(
         max_length=2, choices=choices_experiencia)
