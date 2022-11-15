@@ -47,6 +47,7 @@
                 </form>
 
                 <table class="tabela" cellpadding="20">
+                    {% for empresa in empresas %}
                     <tr>
                         <th>Nome</th>
                         <th>Endereço</th>
@@ -55,7 +56,6 @@
                         <th>Ação</th>
                     </tr>
 
-                    {% for empresa in empresas %}
                         <tr {% if not forloop.counter|is_par %} class="tabela-linha" {% endif %}>
                             <td>{{ empresa.nome }}</td>
                             <td>{{ empresa.endereco }}</td>
@@ -70,16 +70,15 @@
                                 Quantidade de vagas
                             </td>
                             <td>
-                                <a class="btn-excluir">Excluir empresa</a>
+                                <a class="btn-excluir" href="{% url 'excluir_empresa' empresa.id %}">Excluir empresa</a>
                             </td>
                         </tr>
-                    {% endfor %}
                 </table>
+                    {% empty %}
+                        <br>
+                        <p>Não existem empresas cadastradas.</p>
+                    {% endfor %}
             </div>
-
-
-            
-
         </div>
     </div>
 

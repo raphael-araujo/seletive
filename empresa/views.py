@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.messages import constants
-from django.shortcuts import HttpResponse, redirect, render
+from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 
 from .models import Empresa, Tecnologia
 from .utils import empresa_is_valid
@@ -16,7 +16,7 @@ def nova_empresa(request):
         tecnologias = request.POST.getlist('tecnologias')
         caracteristicas = request.POST['caracteristicas']
         logo = request.FILES.get('logo')
-        print(f'1- {tecnologias}')
+
         if not empresa_is_valid(request, nome, email, cidade, endereco, nicho, tecnologias, caracteristicas, logo):
             return redirect('/home/nova_empresa')
         try:
@@ -64,3 +64,15 @@ def empresas(request):
     }
 
     return render(request, 'empresas.html', context)
+
+
+def excluir_empresa(request, id):
+    empresa = get_object_or_404(Empresa, id=id)
+    empresa.delete()
+    
+    messages.add_message(
+        request,
+        level=constants.WARNING,
+        message=f'Empresa "{empresa.nome}" excluída com sucesso.'
+    )
+    return redirect('/home/empresas')
