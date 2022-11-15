@@ -47,7 +47,6 @@
                 </form>
 
                 <table class="tabela" cellpadding="20">
-                    {% for empresa in empresas %}
                     <tr>
                         <th>Nome</th>
                         <th>Endereço</th>
@@ -56,6 +55,7 @@
                         <th>Ação</th>
                     </tr>
 
+                    {% for empresa in empresas %}
                         <tr {% if not forloop.counter|is_par %} class="tabela-linha" {% endif %}>
                             <td>{{ empresa.nome }}</td>
                             <td>{{ empresa.endereco }}</td>
@@ -66,18 +66,23 @@
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td>
-                                Quantidade de vagas
+                            <td >
+                                {% if empresa.quantidade_vagas > 0 %}
+                                    <img src="{% static 'empresa/img/flag_green.png' %}" alt="Green flag">
+                                    {% else %}
+                                    <img src="{% static 'empresa/img/flag_red.png' %}" alt="Red flag">
+                                {% endif %}
+                                &nbsp&nbsp{{ empresa.quantidade_vagas }} vaga(s)
                             </td>
                             <td>
                                 <a class="btn-excluir" href="{% url 'excluir_empresa' empresa.id %}">Excluir empresa</a>
                             </td>
                         </tr>
-                </table>
-                    {% empty %}
+                        {% empty %}
                         <br>
                         <p>Não existem empresas cadastradas.</p>
-                    {% endfor %}
+                        {% endfor %}
+                </table>
             </div>
         </div>
     </div>
