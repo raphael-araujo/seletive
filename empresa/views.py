@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 
-from .models import Empresa, Tecnologia
+from .models import Empresa, Tecnologia, Vaga
 from .utils import empresa_is_valid
 
 
@@ -78,10 +78,25 @@ def empresas(request):
 def excluir_empresa(request, id):
     empresa = get_object_or_404(Empresa, id=id)
     empresa.delete()
-    
+
     messages.add_message(
         request,
         level=constants.WARNING,
         message=f'Empresa "{empresa.nome}" excluída com sucesso.'
     )
     return redirect('/home/empresas')
+
+
+def empresa(request, id):
+    empresa = get_object_or_404(Empresa, id=id)
+    empresas = Empresa.objects.all()
+    tecnologias = Tecnologia.objects.all()
+    vagas = Vaga.objects.filter(empresa_id=id)
+    context = {
+        'empresa': empresa,
+        'tecnologias': tecnologias,
+        'empresas': empresas,
+        'vagas': vagas
+    }
+
+    return render(request, 'empresa.html', context)
