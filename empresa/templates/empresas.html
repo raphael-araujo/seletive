@@ -25,7 +25,7 @@
             <div class="borda-box"></div>
             <div class="body-box">
             
-                <form>
+                <form action="{% url 'empresas' %}" method="GET"> {% csrf_token %}
                 <div class="row">
                     
                         <div class="col-md-5">
@@ -33,8 +33,9 @@
                         </div>
 
                         <div class="col-md-4">
-                            <select class="form-select" name="tecnologias">
-                                {% for tecnologia in tecnologias %}
+                            <select class="form-select" name="tecnologias" title="Selecione uma tecnologia">
+                                <option value="" >------ Selecione uma tecnologia ------</option>
+                                {% for tecnologia in tecnologias|dictsort:"tecnologia" %}
                                     <option value="{{ tecnologia.id }}">{{ tecnologia }}</option>
                                 {% endfor %}
                             </select>
@@ -45,7 +46,7 @@
                     </div>
                 </div>
                 </form>
-
+            {% if empresas %}
                 <table class="tabela" cellpadding="20">
                     <tr>
                         <th>Nome</th>
@@ -78,11 +79,12 @@
                                 <a class="btn-excluir" href="{% url 'excluir_empresa' empresa.id %}">Excluir empresa</a>
                             </td>
                         </tr>
-                        {% empty %}
-                        <br>
-                        <p>Não existem empresas cadastradas.</p>
-                        {% endfor %}
+                    {% endfor %}
                 </table>
+            {% else %}
+                <br>
+                <p align="center">Nenhuma empresa encontrada</p>
+            {% endif %}
             </div>
         </div>
     </div>
