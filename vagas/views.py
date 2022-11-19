@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.messages import constants
 from django.http import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from empresa.models import Vaga
 
 from .utils import vaga_is_valid
@@ -51,3 +51,12 @@ def nova_vaga(request):
             return redirect(f'/home/empresa/{empresa}')
     else:
         raise Http404()
+
+
+def vaga(request, id):
+    vaga = get_object_or_404(Vaga, id=id)
+    context = {
+        'vaga': vaga
+    }
+
+    return render(request, 'vaga.html', context)
