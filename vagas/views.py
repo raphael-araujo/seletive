@@ -4,7 +4,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from empresa.models import Vaga
 
-from .utils import vaga_is_valid
+from .models import Tarefa
+from .utils import vaga_is_valid, tarefa_is_valid
 
 
 def nova_vaga(request):
@@ -60,3 +61,36 @@ def vaga(request, id):
     }
 
     return render(request, 'vaga.html', context)
+
+
+def nova_tarefa(request, id_vaga):  # Adicionar validação
+    titulo = request.POST['titulo']
+    prioridade = request.POST['prioridade']
+    data = request.POST['data']
+
+    if not tarefa_is_valid(request, titulo, prioridade, data):
+        return redirect(f'/vagas/vaga/{id_vaga}')
+
+    try:
+        t = Tarefa(
+            vaga_id=id_vaga,
+            titulo=titulo, 
+            prioridade=prioridade,
+            data=data
+        )
+        t.save()
+
+        messages.add_message(
+            request,
+            constants.SUCCESS,
+            message='Tarefa adicionada com sucesso.'
+        )
+        return redirect(f'/vagas/vaga/{id_vaga}')
+
+    except:
+        messages.add_message(
+            request,
+            constants.ERROR,
+            message='Erro interno do sistema'
+        )
+        return redirect(f'/vagas/vaga/{id_vaga}')
