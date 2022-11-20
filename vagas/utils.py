@@ -40,3 +40,25 @@ def vaga_is_valid(request, titulo, email, tecnologias_dominadas, tecnologias_nao
         return False
 
     return True
+
+
+def tarefa_is_valid(request, titulo, prioridade, data):
+    from .models import Tarefa
+
+    if (len(titulo.strip()) == 0) or (len(prioridade.strip()) == 0) or (len(data.strip()) == 0):
+        messages.add_message(
+            request,
+            level=constants.ERROR,
+            message='Preencha todos os campos.'
+        )
+        return False
+
+    if prioridade not in [i[0] for i in Tarefa.choices_prioridade]:
+        messages.add_message(
+            request,
+            level=constants.ERROR,
+            message='Nível de prioridade inválido.'
+        )
+        return False
+
+    return True
