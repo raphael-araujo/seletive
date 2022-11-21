@@ -47,6 +47,10 @@
     margin-top: 10px;
 }
 
+.tabela {
+    width: 100%;
+}
+
 .li-tech {
     background-color: #3B0032;
     padding: 10px;

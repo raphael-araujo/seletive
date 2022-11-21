@@ -35,7 +35,6 @@
                 <div class="col-md">
                     <p class="titulo2">Crie uma tarefa</p>
                     <p>Lembre-se de realizar todas suas tarefas com antecedência!</p>
-
                     <form method="POST" action="{% url 'nova_tarefa' vaga.id %}"> {% csrf_token %}
                         <label>Título:</label>
                         <input name="titulo" type="text" class="form-control input-tarefa" placeholder="Digite o título da tarefa..."> 
@@ -51,37 +50,33 @@
                         <input name="data" type="date" class="form-control input-tarefa" placeholder=""> 
                         <br>
                         <input type="submit" value="Nova tarefa" class="btn btn-orange">
-
                     </form>
-
                 </div>
 
                 <div class="col-md">
                     {% for tarefa in tarefas %}
                         <div class="li-tarefa">
-                            <label>{{ tarefa.titulo }}</label>
-                            <label class="prioridade-bloco">
-                                {{ tarefa.icon }}
-                            </label>
-                            <label class="prioridade-bloco">
-                                {{ tarefa.data }}
-                            </label>
-                            <label class="prioridade-bloco">
-                                <a href="{% url 'finalizar_tarefa' tarefa.id %}" class="btn btn-success">Finalizar tarefa</a>
-                            </label>
+                            <table cellpading="20" class="tabela">
+                                <tr class="prioridade-bloco">
+                                    <td align="center" width="150px">
+                                        {{ tarefa.titulo }}
+                                    </td>
+                                    <td title="Prioridade: {{ tarefa.get_prioridade_display }}" align="center" width="60px">
+                                        {{ tarefa.icon }}
+                                    </td>
+                                    <td align="center">
+                                        {{ tarefa.data }}
+                                    </td>
+                                    <td align="right" width="150px">
+                                        <a href="{% url 'finalizar_tarefa' tarefa.id %}" class="btn btn-success">Finalizar tarefa</a>
+                                    </td >
+                                </tr>
+                            </table>
                         </div>
                     {% endfor %}
-                        
-
-                        
-
-                    
-                    
                 </div>
-
             </div>
         </div>
-
     </div>
 
     <div class="container bg3">
