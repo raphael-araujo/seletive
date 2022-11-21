@@ -56,14 +56,17 @@ def nova_vaga(request):
 
 def vaga(request, id):
     vaga = get_object_or_404(Vaga, id=id)
+    tarefas = Tarefa.objects.filter(vaga=vaga).filter(realizada=False)
+
     context = {
-        'vaga': vaga
+        'vaga': vaga,
+        'tarefas': tarefas
     }
 
     return render(request, 'vaga.html', context)
 
 
-def nova_tarefa(request, id_vaga):  # Adicionar validação
+def nova_tarefa(request, id_vaga):
     titulo = request.POST['titulo']
     prioridade = request.POST['prioridade']
     data = request.POST['data']
@@ -94,3 +97,26 @@ def nova_tarefa(request, id_vaga):  # Adicionar validação
             message='Erro interno do sistema'
         )
         return redirect(f'/vagas/vaga/{id_vaga}')
+
+
+def finalizar_tarefa(request, id):
+    tarefas_list = Tarefa.objects.filter(id=id).filter(realizada=False)
+
+    if not tarefas_list.exists():
+        messages.add_message(
+            request,
+            constants.ERROR,
+            message='Erro interno do sistema'
+        )
+        return redirect('/home/empresas/')
+
+    tarefa = tarefas_list.first()
+    tarefa.realizada = True
+    tarefa.save()
+
+    messages.add_message(
+        request,
+        constants.SUCCESS,
+        message='Tarefa finalizada com sucesso.'
+    )
+    return redirect(f'/vagas/vaga/{tarefa.vaga.id}')
