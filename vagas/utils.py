@@ -62,3 +62,15 @@ def tarefa_is_valid(request, titulo, prioridade, data):
         return False
 
     return True
+
+
+def enviar_email_is_valid(request, assunto, corpo):
+    if (len(assunto.strip()) == 0) or (len(corpo.strip()) == 0):
+        messages.add_message(
+            request,
+            level=constants.ERROR,
+            message='Preencha todos os campos.'
+        )
+        return False
+
+    return True
