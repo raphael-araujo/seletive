@@ -33,3 +33,16 @@ class Tarefa(models.Model):
 
     def __str__(self):
         return self.titulo
+
+
+class Emails(models.Model):
+    vaga = models.ForeignKey(Vaga, on_delete=models.DO_NOTHING)
+    assunto = models.CharField(max_length=100)
+    corpo = models.TextField()
+    enviado = models.BooleanField()
+
+    def __str__(self):
+        return self.assunto
+
+    class Meta:
+        verbose_name_plural = 'Emails'
