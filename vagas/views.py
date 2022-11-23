@@ -1,11 +1,15 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.core.mail import EmailMultiAlternatives
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from empresa.models import Vaga
 
-from .models import Tarefa
-from .utils import vaga_is_valid, tarefa_is_valid
+from .models import Emails, Tarefa
+from .utils import enviar_email_is_valid, tarefa_is_valid, vaga_is_valid
 
 
 def nova_vaga(request):
@@ -57,10 +61,12 @@ def nova_vaga(request):
 def vaga(request, id):
     vaga = get_object_or_404(Vaga, id=id)
     tarefas = Tarefa.objects.filter(vaga=vaga).filter(realizada=False)
+    emails = Emails.objects.filter(vaga=vaga)
 
     context = {
         'vaga': vaga,
-        'tarefas': tarefas
+        'tarefas': tarefas,
+        'emails': emails
     }
 
     return render(request, 'vaga.html', context)
@@ -120,3 +126,48 @@ def finalizar_tarefa(request, id):
         message='Tarefa finalizada com sucesso.'
     )
     return redirect(f'/vagas/vaga/{tarefa.vaga.id}')
+
+
+def enviar_email(request, id_vaga):
+    vaga = get_object_or_404(Vaga, id=id_vaga)
+    assunto = request.POST['assunto']
+    corpo = request.POST['corpo']
+
+    html_content = render_to_string('emails/template_email.html', {'corpo': corpo})
+    text_content = strip_tags(html_content)
+    email = EmailMultiAlternatives(assunto, text_content, settings.EMAIL_HOST_USER, [vaga.email,])
+    email.attach_alternative(html_content, 'text/html')
+
+    if not enviar_email_is_valid(request, assunto, corpo):
+        return redirect(f'/vagas/vaga/{id_vaga}')
+    try:
+        if email.send():
+            mail = Emails(
+                vaga=vaga,
+                assunto=assunto,
+                corpo=corpo,
+                enviado=True
+            )
+            mail.save()
+
+            messages.add_message(
+                request,
+                constants.SUCCESS,
+                message='Email enviado com sucesso.'
+            )
+            return redirect(f'/vagas/vaga/{id_vaga}')
+    except:
+        mail = Emails(
+            vaga=vaga,
+            assunto=assunto,
+            corpo=corpo,
+            enviado=False
+        )
+        mail.save()
+
+        messages.add_message(
+            request,
+            constants.ERROR,
+            message='Erro interno do sistema.'
+        )
+        return redirect(f'/vagas/vaga/{id_vaga}')
