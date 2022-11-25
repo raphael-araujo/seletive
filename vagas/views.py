@@ -72,6 +72,35 @@ def vaga(request, id):
     return render(request, 'vaga.html', context)
 
 
+def atualizar_progresso(request, id_vaga):
+    if request.method == 'POST':
+        vaga = get_object_or_404(Vaga, id=id_vaga)
+        novo_status = request.POST.getlist('status')
+
+        if len(novo_status) == 0:
+            messages.add_message(
+                request,
+                constants.ERROR,
+                message='Selecione um status.'
+            )
+            return redirect(f'/vagas/vaga/{id_vaga}')
+
+        elif vaga.status == novo_status[0]:
+            messages.add_message(
+                request,
+                constants.ERROR,
+                message='Status já selecionado.'
+            )
+            return redirect(f'/vagas/vaga/{id_vaga}')
+
+        else:
+            vaga.status = novo_status[0]
+            vaga.save()
+            return redirect(f'/vagas/vaga/{id_vaga}')
+    else:
+        raise Http404()
+
+
 def nova_tarefa(request, id_vaga):
     titulo = request.POST['titulo']
     prioridade = request.POST['prioridade']
