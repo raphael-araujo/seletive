@@ -27,6 +27,19 @@
                 {{ vaga.progresso }}%
             </div>
         </div>
+        <br>
+
+        <form action="{% url 'atualizar_progresso' vaga.id %}" method="POST"> {% csrf_token %}
+            <div class="row"> &nbsp;&nbsp;&nbsp;&nbsp;
+                <select name="status" class="form-select" style="width: 15%">
+                    <option value="" selected disabled>Atualizar progresso</option>
+                    {% for valor, status in vaga.choices_status %}
+                        <option value="{{ valor }}">{{ status }}</option>
+                    {% endfor %}
+                </select>&nbsp;&nbsp;
+                <input class="btn btn-success" type="submit"value="Atualizar" style="width: 7%;">
+            </div>
+        </form>
     </div>
 
     <div class="bg2">
