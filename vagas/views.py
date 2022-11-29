@@ -200,3 +200,34 @@ def enviar_email(request, id_vaga):
             message='Erro interno do sistema.'
         )
         return redirect(f'/vagas/vaga/{id_vaga}')
+
+
+def tecnologia_status(request, id_vaga):
+    if request.method == 'POST':
+        vaga = get_object_or_404(Vaga, id=id_vaga)
+
+        try:
+            tecnologia1 = request.POST.get('tecnologia_dominada')
+            tecnologia2 = request.POST.get('tecnologia_estudar')
+
+            if tecnologia1:
+                vaga.tecnologias_dominadas.remove(tecnologia1)
+                vaga.tecnologias_estudar.add(tecnologia1)
+                vaga.save()
+
+            if tecnologia2:
+                vaga.tecnologias_estudar.remove(tecnologia2)
+                vaga.tecnologias_dominadas.add(tecnologia2)
+                vaga.save()
+
+            return redirect(f'/vagas/vaga/{id_vaga}#tecnologias')
+
+        except:
+            messages.add_message(
+                request,
+                constants.ERROR,
+                message='Erro ao realizar a operação.'
+            )
+            return redirect(f'/vagas/vaga/{id_vaga}')
+
+    raise Http404()
