@@ -19,7 +19,11 @@
         {% endif %}
         <br>
         <h3 class="titulo">{{vaga.titulo}}</h3>
-        <p class="titulo2">{{vaga.empresa}}</p>
+        <p class="titulo2">
+            <a href="{% url 'empresa' vaga.empresa.id %}" style="text-decoration: none; color: rgb(80, 63, 63);">
+                {{vaga.empresa}}
+            </a>
+        </p>
         <p>Progresso atual: <strong>({{vaga.get_status_display}})</strong></p>
 
         <div style="width: 40%" class="progress">
