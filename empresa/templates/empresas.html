@@ -48,7 +48,7 @@
                 </form>
             {% if empresas %}
                 <table class="tabela" cellpadding="20">
-                    <tr>
+                    <tr align="center">
                         <th>Nome</th>
                         <th>Endereço</th>
                         <th>Tecnologias usadas</th>
@@ -56,10 +56,12 @@
                         <th>Ação</th>
                     </tr>
 
-                    {% for empresa in empresas %}
-                        <tr {% if not forloop.counter|is_par %} class="tabela-linha" {% endif %}>
+                    {% for empresa in empresas|dictsort:"nome" %}
+                        <tr {% if not forloop.counter|is_par %} class="tabela-linha" {% endif %} align="center">
                             <td>
-                                <a href="{% url 'empresa' empresa.id %}">{{ empresa.nome }}</a>
+                                <a href="{% url 'empresa' empresa.id %}" style="text-decoration: none; color: #7D2948;">
+                                    <strong>{{ empresa.nome }}</strong>
+                                </a>
                             </td>
                             <td>{{ empresa.endereco }}</td>
                             <td>

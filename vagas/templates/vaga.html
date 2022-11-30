@@ -120,11 +120,11 @@
 
     <div class="bg2">
         <div class="container">
-            <div class="row"> 
-                <h3 class="titulo">Histórico de e-mails</h3>
+            <h3 class="titulo">Histórico de e-mails</h3>
+            <div class="row" align="center"> 
                     {% for email in emails %}
                         <div class="col-md">
-                            <div class="box-email">
+                            <div class="box-email" align="left">
                                 <div class="header-email">
                                     {{ email.assunto }}
                                 </div>
@@ -138,7 +138,7 @@
         </div>
     </div>
 
-    <div class="container bg3">
+    <div class="container bg3" align="center">
         <div class="row">
             <div class="col-md">
                 <p class="titulo2" id="tecnologias">Tecnologias que domino</p>
@@ -167,7 +167,7 @@
             </div>
 
             <div class="col-md">
-                <p class="titulo2">Preciso estudar</p>
+                <p class="titulo2">Tecnologias que preciso estudar</p>
                     {% for tecnologia_estudar in vaga.tecnologias_estudar.all %}
                         <div class="li-tech">
                             <table class="tabela">
